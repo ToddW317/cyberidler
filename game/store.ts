@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { GameState, ClanUpgrade, ClanMission, ProductionNode, Research, Skill, MarketItem } from '../types/game';
+import { GameState, ClanUpgrade, ClanMission, ProductionNode, Research, Skill, MarketItem, ProductionChain, AutomationUpgrade, Blueprint, IllegalGood, BlackMarketOrder, ProductionChain, AutomationUpgrade, Blueprint, Worker, ProductionEvent, ProductionQuota } from '../types/game';
 import { auth } from '../lib/firebase';
 import { User } from 'firebase/auth';
 import { differenceInSeconds } from 'date-fns';
@@ -23,9 +23,11 @@ const CLAN_UPGRADES: ClanUpgrade[] = [
   // Add more clan upgrades here
 ];
 
+
 const CLAN_MISSIONS: ClanMission[] = [
   // Add clan missions here
 ];
+
 
 
 const productionNodes: { [key: string]: ProductionNode } = {
@@ -183,6 +185,7 @@ const productionNodes: { [key: string]: ProductionNode } = {
     purchaseCost: { credits: 75000, darkMatter: 25 }
   }
 };
+
 
 interface AuthState {
   user: User | null;
@@ -369,6 +372,15 @@ interface GameState {
   upgradeOrg: (upgradeName: string) => void;
   startOrgMission: (missionName: string) => void;
   completeOrgMission: (missionName: string) => void;
+  productionChains: Record<string, ProductionChain>;
+  automationUpgrades: AutomationUpgrade[];
+  blueprints: Blueprint[];
+  workers: Worker[];
+  startProductionChain: (chainId: string) => void;
+  upgradeAutomation: (chainId: string, upgradeId: string) => void;
+  unlockBlueprint: (blueprintId: string) => void;
+  assignWorker: (workerId: string, chainId: string) => void;
+  updateProductionProgress: (deltaTime: number) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -1173,6 +1185,30 @@ export const useGameStore = create<GameState>()(
           }
         };
       }),
+      productionChains: {
+        basicCircuitBoard: {
+          id: 'basicCircuitBoard',
+          name: 'Basic Circuit Board',
+          stages: [
+            {
+              inputs: { rawMaterials: 2, energy: 1 },
+              outputs: { components: 1 },
+              duration: 60,
+              requiredNode: 'Component Fabricator',
+            },
+            {
+              inputs: { components: 2, energy: 2 },
+              outputs: { basicCircuitBoard: 1 },
+              duration: 120,
+              requiredNode: 'Advanced Component Assembler',
+            },
+          ],
+          finalOutput: { basicCircuitBoard: 1 },
+          automationLevel: 0,
+          blueprintUnlocked: false,
+        },
+        // Add more production chains here as needed
+      },
     }),
     {
       name: 'game-storage',

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGameStore, useTheme } from '../../game/store';
 import { FuturesTrading } from './FuturesTrading';
+import { BlackMarket } from './BlackMarket';
 
 const resourceIcons: { [key: string]: string } = {
   credits: '💰',
@@ -27,6 +28,7 @@ export const Market: React.FC = () => {
   const [selectedResource, setSelectedResource] = useState<string | null>(null);
   const [buyQuantity, setBuyQuantity] = useState(0);
   const [showAutomatedTrading, setShowAutomatedTrading] = useState(false);
+  const [showBlackMarket, setShowBlackMarket] = useState(false);
 
   const bgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
   const textColor = theme === 'dark' ? 'text-white' : 'text-gray-800';
@@ -137,52 +139,72 @@ export const Market: React.FC = () => {
     <div className={`${bgColor} ${textColor} p-6 rounded-lg shadow-lg`}>
       <h2 className="text-3xl font-bold mb-6">Market</h2>
       
-      <div className="mb-6 flex space-x-4">
-        <button
-          onClick={() => setActiveTab('market')}
-          className={`px-4 py-2 rounded-lg ${activeTab === 'market' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
-        >
-          Market
-        </button>
-        <button
-          onClick={() => setActiveTab('myOrders')}
-          className={`px-4 py-2 rounded-lg ${activeTab === 'myOrders' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
-        >
-          My Orders
-        </button>
-        <button
-          onClick={() => setShowAutomatedTrading(!showAutomatedTrading)}
-          className={`px-4 py-2 rounded-lg ${showAutomatedTrading ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-800'}`}
-        >
-          {showAutomatedTrading ? 'Hide Automated Trading' : 'Show Automated Trading'}
-        </button>
-        <button
-          onClick={() => setActiveTab('futures')}
-          className={`px-4 py-2 rounded-lg ${activeTab === 'futures' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
-        >
-          Futures Trading
-        </button>
-      </div>
-
-      {activeTab === 'market' && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-1">
-            {renderResourceCards()}
+      {showBlackMarket ? (
+        <>
+          <button
+            onClick={() => setShowBlackMarket(false)}
+            className="mb-4 px-4 py-2 rounded-lg bg-gray-500 text-white hover:bg-gray-600 transition-colors duration-200"
+          >
+            Back to Market
+          </button>
+          <BlackMarket />
+        </>
+      ) : (
+        <>
+          <div className="mb-6 flex space-x-4">
+            <button
+              onClick={() => setActiveTab('market')}
+              className={`px-4 py-2 rounded-lg ${activeTab === 'market' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
+            >
+              Market
+            </button>
+            <button
+              onClick={() => setActiveTab('myOrders')}
+              className={`px-4 py-2 rounded-lg ${activeTab === 'myOrders' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
+            >
+              My Orders
+            </button>
+            <button
+              onClick={() => setShowAutomatedTrading(!showAutomatedTrading)}
+              className={`px-4 py-2 rounded-lg ${showAutomatedTrading ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-800'}`}
+            >
+              {showAutomatedTrading ? 'Hide Automated Trading' : 'Show Automated Trading'}
+            </button>
+            <button
+              onClick={() => setActiveTab('futures')}
+              className={`px-4 py-2 rounded-lg ${activeTab === 'futures' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
+            >
+              Futures Trading
+            </button>
+            <button
+              onClick={() => setShowBlackMarket(true)}
+              className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors duration-200"
+            >
+              Black Market
+            </button>
           </div>
-          <div className="md:col-span-2">
-            {selectedResource && renderMarketOrders()}
-          </div>
-        </div>
-      )}
 
-      {activeTab === 'myOrders' && renderMyOrders()}
-      {activeTab === 'futures' && <FuturesTrading />}
+          {activeTab === 'market' && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-1">
+                {renderResourceCards()}
+              </div>
+              <div className="md:col-span-2">
+                {selectedResource && renderMarketOrders()}
+              </div>
+            </div>
+          )}
 
-      {showAutomatedTrading && (
-        <div className="mt-6">
-          <h3 className="text-xl font-bold mb-4">Automated Trading</h3>
-          {/* Add your AutomatedTrading component here */}
-        </div>
+          {activeTab === 'myOrders' && renderMyOrders()}
+          {activeTab === 'futures' && <FuturesTrading />}
+
+          {showAutomatedTrading && (
+            <div className="mt-6">
+              <h3 className="text-xl font-bold mb-4">Automated Trading</h3>
+              {/* Add your AutomatedTrading component here */}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

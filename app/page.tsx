@@ -8,6 +8,7 @@ import { ProfilePage } from './components/ProfilePage';
 import { Market } from './components/Market';
 import { ResearchTree } from './components/ResearchTree';
 import { OrgManagement } from './components/OrgManagement';
+import { AdvancedProduction } from './components/AdvancedProduction';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -56,6 +57,8 @@ export default function Home() {
         return <ProfilePage />;
       case 'org':
         return <OrgManagement />;
+      case 'advancedProduction':
+        return <AdvancedProduction />;
       default:
         return <Dashboard />;
     }
@@ -98,12 +101,12 @@ export default function Home() {
                   Research
                 </button>
                 <button
-                  onClick={() => setActiveTab('profile')}
+                  onClick={() => setActiveTab('advancedProduction')}
                   className={`ml-4 px-3 py-2 rounded-md text-sm font-medium ${
-                    activeTab === 'profile' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                    activeTab === 'advancedProduction' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                   }`}
                 >
-                  Profile
+                  Advanced Production
                 </button>
                 <button
                   onClick={() => setActiveTab('org')}
@@ -112,6 +115,14 @@ export default function Home() {
                   }`}
                 >
                   Organization
+                </button>
+                <button
+                  onClick={() => setActiveTab('profile')}
+                  className={`ml-4 px-3 py-2 rounded-md text-sm font-medium ${
+                    activeTab === 'profile' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  }`}
+                >
+                  Profile
                 </button>
               </div>
             )}

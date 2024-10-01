@@ -6,6 +6,7 @@ import { ResourceDisplay } from './ResourceDisplay';
 export const Dashboard: React.FC = () => {
   const resources = useGameStore((state) => state.resources);
   const productionNodes = useGameStore((state) => state.productionNodes);
+  const productionChains = useGameStore((state) => state.productionChains);
   const { theme } = useTheme();
 
   const bgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
@@ -34,6 +35,15 @@ export const Dashboard: React.FC = () => {
               <button className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-200">
                 Upgrade All Nodes
               </button>
+            </div>
+
+            <div className={`${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg shadow-md p-6`}>
+              <h2 className="text-xl font-semibold mb-4">Advanced Production Chains</h2>
+              {productionChains && Object.values(productionChains).map((chain) => (
+                <div key={chain.id} className="mb-2">
+                  <p>{chain.name} - Automation Level: {chain.automationLevel}</p>
+                </div>
+              ))}
             </div>
           </div>
 

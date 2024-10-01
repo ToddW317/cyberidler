@@ -135,3 +135,100 @@ export interface Resource {
     org: Org | null;
     // ... (other properties)
   }
+  
+  export interface ProductionStage {
+    id: string;
+    name: string;
+    inputs: { [key: string]: number };
+    outputs: { [key: string]: number };
+    duration: number;
+    requiredNode: string;
+    efficiency: number;
+    qualityThreshold: number;
+  }
+  
+  export interface ProductionChain {
+    id: string;
+    name: string;
+    automationLevel: number;
+    blueprintUnlocked: boolean;
+    stages: ProductionStage[];
+    finalOutput: Record<string, number>;
+    status: 'idle' | 'producing' | 'completed';
+    currentStage: number;
+    progress: number;
+  }
+  
+  export interface AutomationUpgrade {
+    id: string;
+    name: string;
+    description: string;
+    cost: { [key: string]: number };
+    effect: (chain: ProductionChain) => void;
+    tier: number;
+    requiredUpgrades: string[];
+  }
+  
+  export interface Blueprint {
+    id: string;
+    name: string;
+    description: string;
+    unlockCost: { [key: string]: number };
+    productionChainId: string;
+    modifiers: { [key: string]: number };
+    researchProgress: number;
+  }
+  
+  export interface Worker {
+    id: string;
+    name: string;
+    skills: { [key: string]: number };
+    specialization: string;
+    energyLevel: number;
+    salary: number;
+  }
+  
+  export interface ProductionEvent {
+    id: string;
+    type: 'breakdown' | 'powerOutage' | 'qualityIssue' | 'supplyShortage';
+    affectedChainId: string;
+    duration: number;
+    severity: number;
+  }
+  
+  export interface ProductionQuota {
+    id: string;
+    productionChainId: string;
+    requiredOutput: { [key: string]: number };
+    deadline: number;
+    reward: { [key: string]: number };
+  }
+  
+  export interface GameState {
+    // ... existing properties
+    productionChains: Record<string, ProductionChain>;
+    automationUpgrades: AutomationUpgrade[];
+    blueprints: Blueprint[];
+    workers: Worker[];
+    productionEvents: ProductionEvent[];
+    productionQuotas: ProductionQuota[];
+    pollution: number;
+    // ... other properties
+  }
+  
+  export interface BlackMarketOrder extends MarketOrder {
+    riskFactor: number;
+  }
+  
+  export interface GameState {
+    // ... existing properties
+    productionChains: Record<string, ProductionChain>;
+    automationUpgrades: AutomationUpgrade[];
+    blueprints: Blueprint[];
+    illegalGoods: IllegalGood[];
+    blackMarket: {
+      orders: BlackMarketOrder[];
+      reputation: number;
+    };
+    // ... other properties
+  }
